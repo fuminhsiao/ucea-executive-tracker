@@ -7,6 +7,8 @@ from rest_framework import viewsets, permissions
 import json
 from .models import Action, Topic
 from .serializers import ActionSerializer, TopicSerializer
+from django.shortcuts import render
+
 
 # 🔹 保留 REST API 端點
 class TopicViewSet(viewsets.ModelViewSet):
@@ -105,3 +107,6 @@ def delete_action(request, action_id):
             return JsonResponse({"success": True})
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)}, status=400)
+        
+def action_list_view(request):
+    return render(request, "actions.html")
