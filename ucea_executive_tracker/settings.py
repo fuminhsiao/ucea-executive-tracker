@@ -39,12 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'action',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # 添加這一行
-
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,7 +73,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ucea_executive_tracker.wsgi.application'
-
+CORS_ALLOWED_ORIGINS = [
+    "https://www.ucea.org",  # 你的前端網址
+    "http://localhost:3000",  # 允許本地開發環境訪問
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
