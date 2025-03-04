@@ -11,6 +11,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def action_list_view(request):
+    actions = Action.objects.all()
+    return render(request, "actions.html", {"actions": actions, "user": request.user})
+
 # ✅ API：提供所有 Topics
 class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
