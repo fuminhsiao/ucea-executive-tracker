@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Action</title>
+</head>
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name_of_action" placeholder="Action Name" required>
+    <input type="date" name="date" required>
+    <textarea name="description" placeholder="Description"></textarea>
+    <textarea name="meaning" placeholder="Meaning"></textarea>
+    <input type="text" name="source" placeholder="Source URL">
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>

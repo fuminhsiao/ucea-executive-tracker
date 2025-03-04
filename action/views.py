@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Action, Topic
+import logging
+
+logger = logging.getLogger(__name__)
 
 def action_list_view(request):
     actions = Action.objects.all()
@@ -24,28 +27,36 @@ def user_logout(request):
 @login_required
 def add_action(request):
     if request.method == "POST":
-        name = request.POST["name_of_action"]
-        date = request.POST["date"]
-        description = request.POST["description"]
-        meaning = request.POST["meaning"]
-        source = request.POST["source"]
-        
-        action = Action.objects.create(
-            name_of_action=name, date=date, description=description, meaning=meaning, source=source
-        )
-        return redirect("action_list")
+        try:
+            name = request.POST.get("name_of_action")
+            date = request.POST.get("date")
+            description = request.POST.get("description")
+            meaning = request.POST.get("meaning", "")
+            source = request.POST.get("source", "")
+
+            action = Action.objects.create(
+                name_of_action=name, date=date, description=description, meaning=meaning, source=source
+            )
+            return redirect("action_list")
+        except Exception as e:
+            logger.error(f"Error adding action: {str(e)}")
+            return render(request, "error.html", {"message": str(e)})
 
 @login_required
 def edit_action(request, action_id):
     action = Action.objects.get(id=action_id)
     if request.method == "POST":
-        action.name_of_action = request.POST["name_of_action"]
-        action.date = request.POST["date"]
-        action.description = request.POST["description"]
-        action.meaning = request.POST["meaning"]
-        action.source = request.POST["source"]
-        action.save()
-        return redirect("action_list")
+        try:
+            action.name_of_action = request.POST.get("name_of_action")
+            action.date = request.POST.get("date")
+            action.description = request.POST.get("description")
+            action.meaning = request.POST.get("meaning", "")
+            action.source = request.POST.get("source", "")
+            action.save()
+            return redirect("action_list")
+        except Exception as e:
+            logger.error(f"Error editing action: {str(e)}")
+            return render(request, "error.html", {"message": str(e)})
     
     return render(request, "edit_action.html", {"action": action})
 
