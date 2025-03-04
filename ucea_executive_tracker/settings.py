@@ -75,7 +75,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ucea_executive_tracker.wsgi.application'
 CORS_ALLOWED_ORIGINS = [
-    "https://www.ucea.org",  # 你的前端網址
+    "https://www.ucea.org",
+    "https://ucea.org",  # 你的前端網址
     "http://localhost:3000",  # 允許本地開發環境訪問
 ]
 
