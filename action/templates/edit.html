@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Action</title>
+</head>
+<body>
+    <h2>Edit Action</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name_of_action" value="{{ action.name_of_action }}" required>
+        <input type="date" name="date" value="{{ action.date }}" required>
+        <textarea name="description">{{ action.description }}</textarea>
+        <textarea name="meaning">{{ action.meaning }}</textarea>
+        <input type="text" name="source" value="{{ action.source }}">
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
