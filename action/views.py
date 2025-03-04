@@ -3,7 +3,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Action, Topic
 import logging
+from rest_framework import viewsets
+from .models import Action, Topic
+from .serializers import ActionSerializer, TopicSerializer
+class TopicViewSet(viewsets.ModelViewSet):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
+class ActionViewSet(viewsets.ModelViewSet):
+    queryset = Action.objects.all()
+    serializer_class = ActionSerializer
+    
 logger = logging.getLogger(__name__)
 
 def action_list_view(request):
