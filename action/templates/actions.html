@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actions List</title>
+    <title>Actions Management</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,30 +29,61 @@
         .hidden {
             display: none;
         }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- 🔹 登入按鈕 / 使用者狀態 -->
+    <!-- 🔹 登入/登出按鈕 -->
     <div class="login-container">
-        <button id="login-btn" onclick="showLogin()">Login</button>
+        <button id="login-btn" onclick="showLoginForm()">Login</button>
         <button id="logout-btn" class="hidden" onclick="logoutUser()">Logout</button>
     </div>
 
     <h1>Actions List</h1>
     
-    <!-- 🔹 新增 Action 按鈕（登入後才可見） -->
+    <!-- 🔹 新增 Action 按鈕（僅限登入後可見） -->
     <button id="add-action-btn" class="hidden" onclick="showAddForm()">➕ Add Action</button>
 
     <!-- 🔹 Action 列表 -->
     <div id="actions-container"></div>
 
     <!-- 🔹 登入表單 -->
-    <div id="login-form" class="hidden">
+    <div id="login-form" class="form-container hidden">
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-        <button onclick="loginUser()">Login</button>
+        <button class="btn-primary" onclick="loginUser()">Login</button>
+    </div>
+
+    <!-- 🔹 新增/編輯 Action 表單 -->
+    <div id="action-form" class="form-container hidden">
+        <h2 id="form-title">Add Action</h2>
+        <input type="hidden" id="action-id">
+        <input type="text" id="name_of_action" placeholder="Action Name"><br>
+        <input type="date" id="date"><br>
+        <textarea id="description" placeholder="Description"></textarea><br>
+        <textarea id="meaning" placeholder="Meaning"></textarea><br>
+        <input type="text" id="source" placeholder="Source URL"><br>
+        <button class="btn-primary" onclick="submitAction()">Save</button>
+        <button class="btn-secondary" onclick="hideForm()">Cancel</button>
     </div>
 
     <script>
@@ -78,8 +109,8 @@
                     <p><strong>Meaning:</strong> ${action.meaning}</p>
                     <p><strong>Source:</strong> <a href="${action.source}" target="_blank">Link</a></p>
                     ${isAuthenticated ? `
-                        <button onclick="editAction(${action.id})">✏️ Edit</button>
-                        <button onclick="deleteAction(${action.id})">🗑️ Delete</button>
+                        <button class="btn-secondary" onclick="editAction(${action.id}, '${action.name_of_action}', '${action.date}', '${action.description}', '${action.meaning}', '${action.source}')">✏️ Edit</button>
+                        <button class="btn-danger" onclick="deleteAction(${action.id})">🗑️ Delete</button>
                     ` : ""}
                 `;
                 container.appendChild(actionCard);
@@ -98,7 +129,7 @@
             fetchActions();
         }
 
-        function showLogin() {
+        function showLoginForm() {
             document.getElementById("login-form").classList.remove("hidden");
         }
 
@@ -128,15 +159,49 @@
         }
 
         function showAddForm() {
-            alert("🚀 This is where you would show a form to add a new Action.");
+            document.getElementById("form-title").textContent = "Add Action";
+            document.getElementById("action-id").value = "";
+            document.getElementById("action-form").classList.remove("hidden");
         }
 
-        function editAction(id) {
-            alert(`✏️ Editing action with ID: ${id}`);
+        function editAction(id, name, date, description, meaning, source) {
+            document.getElementById("form-title").textContent = "Edit Action";
+            document.getElementById("action-id").value = id;
+            document.getElementById("name_of_action").value = name;
+            document.getElementById("date").value = date;
+            document.getElementById("description").value = description;
+            document.getElementById("meaning").value = meaning;
+            document.getElementById("source").value = source;
+            document.getElementById("action-form").classList.remove("hidden");
         }
 
-        function deleteAction(id) {
-            alert(`🗑️ Deleting action with ID: ${id}`);
+        function hideForm() {
+            document.getElementById("action-form").classList.add("hidden");
+        }
+
+        async function submitAction() {
+            const id = document.getElementById("action-id").value;
+            const data = {
+                name_of_action: document.getElementById("name_of_action").value,
+                date: document.getElementById("date").value,
+                description: document.getElementById("description").value,
+                meaning: document.getElementById("meaning").value,
+                source: document.getElementById("source").value
+            };
+
+            await fetch(id ? `/api/edit_action/${id}/` : "/api/add_action/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            hideForm();
+            fetchActions();
+        }
+
+        async function deleteAction(id) {
+            await fetch(`/api/delete_action/${id}/`, { method: "DELETE" });
+            fetchActions();
         }
 
         document.addEventListener("DOMContentLoaded", checkUserStatus);
