@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actions List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .login-container {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .action-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔹 登入按鈕 / 使用者狀態 -->
+    <div class="login-container">
+        <button id="login-btn" onclick="showLogin()">Login</button>
+        <button id="logout-btn" class="hidden" onclick="logoutUser()">Logout</button>
+    </div>
+
+    <h1>Actions List</h1>
+    
+    <!-- 🔹 新增 Action 按鈕（登入後才可見） -->
+    <button id="add-action-btn" class="hidden" onclick="showAddForm()">➕ Add Action</button>
+
+    <!-- 🔹 Action 列表 -->
+    <div id="actions-container"></div>
+
+    <!-- 🔹 登入表單 -->
+    <div id="login-form" class="hidden">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="loginUser()">Login</button>
+    </div>
+
+    <script>
+        let isAuthenticated = false;
+
+        async function fetchActions() {
+            const response = await fetch("/api/actions/");
+            const data = await response.json();
+            displayActions(data);
+        }
+
+        function displayActions(actions) {
+            const container = document.getElementById("actions-container");
+            container.innerHTML = "";
+            
+            actions.forEach(action => {
+                const actionCard = document.createElement("div");
+                actionCard.classList.add("action-card");
+                actionCard.innerHTML = `
+                    <h2>${action.name_of_action}</h2>
+                    <p><strong>Date:</strong> ${action.date}</p>
+                    <p><strong>Description:</strong> ${action.description}</p>
+                    <p><strong>Meaning:</strong> ${action.meaning}</p>
+                    <p><strong>Source:</strong> <a href="${action.source}" target="_blank">Link</a></p>
+                    ${isAuthenticated ? `
+                        <button onclick="editAction(${action.id})">✏️ Edit</button>
+                        <button onclick="deleteAction(${action.id})">🗑️ Delete</button>
+                    ` : ""}
+                `;
+                container.appendChild(actionCard);
+            });
+        }
+
+        async function checkUserStatus() {
+            const response = await fetch("/api/user_status/");
+            const data = await response.json();
+            isAuthenticated = data.is_authenticated;
+
+            document.getElementById("login-btn").classList.toggle("hidden", isAuthenticated);
+            document.getElementById("logout-btn").classList.toggle("hidden", !isAuthenticated);
+            document.getElementById("add-action-btn").classList.toggle("hidden", !isAuthenticated);
+
+            fetchActions();
+        }
+
+        function showLogin() {
+            document.getElementById("login-form").classList.remove("hidden");
+        }
+
+        async function loginUser() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            
+            const response = await fetch("/api/login/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                alert("Login Successful");
+                document.getElementById("login-form").classList.add("hidden");
+                checkUserStatus();
+            } else {
+                alert("Invalid credentials");
+            }
+        }
+
+        async function logoutUser() {
+            await fetch("/api/logout/");
+            alert("Logged out!");
+            checkUserStatus();
+        }
+
+        function showAddForm() {
+            alert("🚀 This is where you would show a form to add a new Action.");
+        }
+
+        function editAction(id) {
+            alert(`✏️ Editing action with ID: ${id}`);
+        }
+
+        function deleteAction(id) {
+            alert(`🗑️ Deleting action with ID: ${id}`);
+        }
+
+        document.addEventListener("DOMContentLoaded", checkUserStatus);
+    </script>
+
+</body>
+</html>
