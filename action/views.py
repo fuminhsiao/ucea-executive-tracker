@@ -34,13 +34,20 @@ def add_action(request):
             meaning = request.POST.get("meaning", "")
             source = request.POST.get("source", "")
 
+            # ✅ 確保所有欄位都有值
+            if not name or not date or not description:
+                return render(request, "add_action.html", {"error": "請填寫所有必填欄位"})
+
             action = Action.objects.create(
                 name_of_action=name, date=date, description=description, meaning=meaning, source=source
             )
-            return redirect("action_list")
+            return redirect("action_list")  # ✅ 新增成功後，回到列表頁
+
         except Exception as e:
             logger.error(f"Error adding action: {str(e)}")
-            return render(request, "error.html", {"message": str(e)})
+            return render(request, "add_action.html", {"error": str(e)})
+
+    return render(request, "add_action.html")  # ✅ 處理 `GET` 請求時，顯示 `add_action.html`
 
 @login_required
 def edit_action(request, action_id):
