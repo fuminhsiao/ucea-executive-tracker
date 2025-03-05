@@ -79,7 +79,7 @@
             <label>Source URL:</label>
             <input type="text" name="source" value="{{ action.source }}">
 
-            <label>Topics (Select Multiple):</label>
+            <label>Topics (Press ctrl or command to Select Multiple or Deselect):</label>
             <select name="topics" multiple required>
                 {% for topic in topics %}
                     <option value="{{ topic.id }}" {% if topic in action.topics.all %}selected{% endif %}>
