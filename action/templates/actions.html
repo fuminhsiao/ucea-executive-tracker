@@ -6,7 +6,17 @@
     <title>Actions Management</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .action-card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+        .action-card { 
+            background: white; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 5px; 
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+        }
+        .topics {
+            font-weight: bold;
+            color: #007bff;
+        }
         button { padding: 8px 12px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; }
         .btn-primary { background-color: #007bff; color: white; }
         .btn-danger { background-color: #dc3545; color: white; }
@@ -38,6 +48,17 @@
                 <p><strong>Description:</strong> {{ action.description }}</p>
                 <p><strong>Meaning:</strong> {{ action.meaning }}</p>
                 <p><strong>Source:</strong> <a href="{{ action.source }}" target="_blank">Link</a></p>
+
+                <!-- 🔹 顯示 Topic -->
+                <p><strong>Topics:</strong> 
+                    <span class="topics">
+                        {% if action.topics.all %}
+                            {{ action.topics.all|join:", " }}
+                        {% else %}
+                            No topics assigned
+                        {% endif %}
+                    </span>
+                </p>
 
                 {% if user.is_authenticated %}
                     <a href="{% url 'edit_action' action.id %}"><button class="btn-primary">✏️ Edit</button></a>
