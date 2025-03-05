@@ -17,8 +17,9 @@ class ActionViewSet(viewsets.ModelViewSet):
 logger = logging.getLogger(__name__)
 
 def action_list_view(request):
-    actions = Action.objects.all()
-    return render(request, "actions.html", {"actions": actions, "user": request.user})
+    actions = Action.objects.all().order_by('-date')  # 確保按照日期排序
+    topics = Topic.objects.all()  # 獲取所有 Topic
+    return render(request, "actions.html", {"actions": actions, "topics": topics})
 
 def user_login(request):
     if request.method == "POST":
