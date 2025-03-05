@@ -68,20 +68,47 @@ def add_action(request):
 @login_required
 def edit_action(request, action_id):
     action = Action.objects.get(id=action_id)
+
     if request.method == "POST":
         try:
-            action.name_of_action = request.POST.get("name_of_action")
-            action.date = request.POST.get("date")
-            action.description = request.POST.get("description")
-            action.meaning = request.POST.get("meaning", "")
-            action.source = request.POST.get("source", "")
+            name = request.POST.get("name_of_action")
+            date = request.POST.get("date")
+            description = request.POST.get("description")
+            meaning = request.POST.get("meaning", "")
+            source = request.POST.get("source", "")
+            selected_topics = request.POST.getlist("topics")  # Get selected topics (multiple)
+
+            if not name or not date or not description:
+                return render(request, "edit_action.html", {
+                    "error": "Please fill in all required fields.",
+                    "action": action,
+                    "topics": Topic.objects.all()
+                })
+
+            # Update Action fields
+            action.name_of_action = name
+            action.date = date
+            action.description = description
+            action.meaning = meaning
+            action.source = source
             action.save()
+
+            # Update ManyToManyField (Topics)
+            action.topics.set(selected_topics)
+
             return redirect("action_list")
+
         except Exception as e:
-            logger.error(f"Error editing action: {str(e)}")
-            return render(request, "error.html", {"message": str(e)})
-    
-    return render(request, "edit_action.html", {"action": action})
+            return render(request, "edit_action.html", {
+                "error": str(e),
+                "action": action,
+                "topics": Topic.objects.all()
+            })
+
+    return render(request, "edit_action.html", {
+        "action": action,
+        "topics": Topic.objects.all()
+    })
 
 @login_required
 def delete_action(request, action_id):

@@ -18,11 +18,13 @@
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
+            text-align: left;
         }
         h2 {
             color: #333;
+            text-align: center;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 8px;
             margin: 8px 0;
@@ -61,12 +63,31 @@
 
         <form method="post">
             {% csrf_token %}
+
+            <label>Action Name:</label>
             <input type="text" name="name_of_action" value="{{ action.name_of_action }}" required>
+
+            <label>Date:</label>
             <input type="date" name="date" value="{{ action.date }}" required>
+
+            <label>Description:</label>
             <textarea name="description">{{ action.description }}</textarea>
+
+            <label>Meaning:</label>
             <textarea name="meaning">{{ action.meaning }}</textarea>
+
+            <label>Source URL:</label>
             <input type="text" name="source" value="{{ action.source }}">
-            
+
+            <label>Topics (Select Multiple):</label>
+            <select name="topics" multiple required>
+                {% for topic in topics %}
+                    <option value="{{ topic.id }}" {% if topic in action.topics.all %}selected{% endif %}>
+                        {{ topic.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
             <button type="submit" class="btn-primary">Update</button>
             <a href="{% url 'action_list' %}"><button type="button" class="btn-secondary">Cancel</button></a>
         </form>
