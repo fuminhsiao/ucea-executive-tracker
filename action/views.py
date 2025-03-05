@@ -34,6 +34,10 @@ def user_logout(request):
     logout(request)
     return redirect("action_list")  # 登出後重新導向
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Action, Topic
+
 @login_required
 def add_action(request):
     if request.method == "POST":
@@ -43,21 +47,23 @@ def add_action(request):
             description = request.POST.get("description")
             meaning = request.POST.get("meaning", "")
             source = request.POST.get("source", "")
+            selected_topics = request.POST.getlist("topics")  # Get multiple topics
 
-            # ✅ 確保所有欄位都有值
             if not name or not date or not description:
-                return render(request, "add_action.html", {"error": "請填寫所有必填欄位"})
+                return render(request, "add_action.html", {"error": "Please fill in all required fields.", "topics": Topic.objects.all()})
 
             action = Action.objects.create(
                 name_of_action=name, date=date, description=description, meaning=meaning, source=source
             )
-            return redirect("action_list")  # ✅ 新增成功後，回到列表頁
+
+            action.topics.set(selected_topics)  # Assign topics to action
+            return redirect("action_list")
 
         except Exception as e:
-            logger.error(f"Error adding action: {str(e)}")
-            return render(request, "add_action.html", {"error": str(e)})
+            return render(request, "add_action.html", {"error": str(e), "topics": Topic.objects.all()})
 
-    return render(request, "add_action.html")  # ✅ 處理 `GET` 請求時，顯示 `add_action.html`
+    return render(request, "add_action.html", {"topics": Topic.objects.all()})
+
 
 @login_required
 def edit_action(request, action_id):
