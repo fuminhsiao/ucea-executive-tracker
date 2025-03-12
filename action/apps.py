@@ -24,7 +24,7 @@ def create_default_data(sender, **kwargs):
         "Title IX", "Civil Rights", "Antisemitism", "Program Funding", "Regulations", 
         "Immigration", "Curriculum", "Healthcare", "Academic Freedom", 
         "PK-12 School Funding", "Postsecondary Funding", "Postsecondary", 
-        "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education"
+        "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education", "Governance", "Early Childhood"
     ]
 
     # ✅ 預設 `TypeOfAction` 清單

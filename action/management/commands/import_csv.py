@@ -14,37 +14,32 @@ class Command(BaseCommand):
         file_path = kwargs['file_path']
 
         with open(file_path, mode='r', encoding='utf-8') as file:
-            reader = csv.reader(file)  # 先用普通 reader 讀取
-            next(reader)  # ✅ 跳過第一行
-            headers = next(reader)  # ✅ 第二行當作標題
-
-            # ✅ 重新用 DictReader 讀取數據，並設定標題
-            reader = csv.DictReader(file, fieldnames=headers)
+            reader = csv.DictReader(file)
 
             for row in reader:
-                date = parse_date(row['Date']) if row.get('Date') else None
-                name_of_action = row.get('Name of Action', '').strip()
-                description = row.get('What It Says', '').strip()
-                meaning = row.get('What It Means', '').strip()
-                status = row.get('Status', '').strip() or None
-                source = row.get('Primary Source', '').strip() or None
-                challenge_to_action = row.get('Challenges to Action', '').strip() or None
-                news_commentary = row.get('News & Commentary', '').strip() or None
-                notes = row.get('Notes', '').strip() or None
-                additional_info = row.get('Additional Info', '').strip() or None
-                fallout = row.get('Fallout', '').strip() or None
+                date = parse_date(row['Date']) if row['Date'] else None
+                name_of_action = row['Name of Action']
+                description = row['What It Says']
+                meaning = row['What It Means']
+                status = row['Status'] if row['Status'] else None
+                source = row['Primary Source'] if row['Primary Source'] else None
+                challenge_to_action = row['Challenges to Action'] if row['Challenges to Action'] else None
+                news_commentary = row['News & Commentary'] if row['News & Commentary'] else None
+                notes = row['Notes'] if row['Notes'] else None
+                additional_info = row['Additional Info'] if row['Additional Info'] else None
+                fallout = row['Fallout'] if row['Fallout'] else None
 
                 # ✅ 處理 Type of Action (多選)
-                type_of_action_names = row.get('Type of Action', '').split(', ')
-                type_of_actions = [TypeOfAction.objects.get_or_create(name=toa.strip())[0] for toa in type_of_action_names if toa]
+                type_of_action_names = row['Type of Action'].split(', ')
+                type_of_actions = [TypeOfAction.objects.get_or_create(name=toa.strip())[0] for toa in type_of_action_names]
 
                 # ✅ 處理 Actors (多選)
-                actor_names = row.get('Actor/Authorizer', '').split(', ')
-                actors = [Actor.objects.get_or_create(name=actor.strip())[0] for actor in actor_names if actor]
+                actor_names = row['Actor/Authorizer'].split(', ')
+                actors = [Actor.objects.get_or_create(name=actor.strip())[0] for actor in actor_names]
 
                 # ✅ 處理 Topics (多選)
-                topic_names = row.get('Topic', '').split(', ')
-                topics = [Topic.objects.get_or_create(name=topic.strip())[0] for topic in topic_names if topic]
+                topic_names = row['Topic'].split(', ')
+                topics = [Topic.objects.get_or_create(name=topic.strip())[0] for topic in topic_names]
 
                 # ✅ 創建 Action 物件
                 action = Action.objects.create(

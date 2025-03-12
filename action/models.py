@@ -30,7 +30,7 @@ class Action(models.Model):
     ]
 
     date = models.DateField()
-    name_of_action = models.CharField(max_length=255)
+    name_of_action = models.CharField(max_length=500)
     type_of_action = models.ManyToManyField(TypeOfAction, related_name="actions")  # ✅ 改為多對多
     actors = models.ManyToManyField(Actor, related_name="actions")  # ✅ 多對多
     topics = models.ManyToManyField(Topic, related_name="actions")
@@ -38,7 +38,7 @@ class Action(models.Model):
     meaning = models.TextField()
     source = models.URLField(blank=True, null=True)
 
-    status = models.CharField(max_length=255, blank=True, null=True)  
+    status = models.CharField(max_length=500, blank=True, null=True)  
     challenge_to_action = models.TextField(blank=True, null=True)
     news_commentary = models.URLField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
