@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import dj_database_url
 import os
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,6 +31,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', 'ucea-executive-tracker.onrender.com')]
 ALLOWED_HOSTS += ['127.0.0.1', 'localhost']
 
+load_dotenv() 
 
 # Application definition
 
