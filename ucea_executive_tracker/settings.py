@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import dj_database_url
 import os
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +29,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', 'ucea-executive-tracker.onrender.com')]
+ALLOWED_HOSTS += ['127.0.0.1', 'localhost']
 
+load_dotenv() 
 
 # Application definition
 
@@ -85,7 +89,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "https://www.ucea.org",
     "https://ucea.org",  # 你的前端網址
-    "http://localhost:3000",  # 允許本地開發環境訪問
+    "http://127.0.0.1:8000",  # 允許本地開發環境訪問
 ]
 
 # Database
@@ -93,6 +97,7 @@ CORS_ALLOWED_ORIGINS = [
 
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    
 }
 
 
