@@ -12,6 +12,12 @@ class Actor(models.Model):  # ✅ Actor 仍為多對多
     def __str__(self):
         return self.name
 
+class TypeOfAction(models.Model):  # ✅ 新增獨立模型
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Action(models.Model):
     TYPE_OF_ACTION_CHOICES = [
         ('Executive Order', 'Executive Order'),
@@ -25,7 +31,7 @@ class Action(models.Model):
 
     date = models.DateField()
     name_of_action = models.CharField(max_length=255)
-    type_of_action = models.CharField(max_length=50, choices=TYPE_OF_ACTION_CHOICES, default='Agency action', null=True)  # ✅ 改為 `CharField`
+    type_of_action = models.ManyToManyField(TypeOfAction, related_name="actions")  # ✅ 改為多對多
     actors = models.ManyToManyField(Actor, related_name="actions")  # ✅ 多對多
     topics = models.ManyToManyField(Topic, related_name="actions")
     description = models.TextField()
