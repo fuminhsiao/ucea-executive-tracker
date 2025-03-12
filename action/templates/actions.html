@@ -68,7 +68,7 @@
     <div id="actions-container">
         {% for action in actions|dictsortreversed:"date" %}  <!-- Sort by date descending -->
             <div class="action-card" data-name="{{ action.name_of_action|lower }}" data-description="{{ action.description|lower }}" data-topics="{% for topic in action.topics.all %}{{ topic.name|lower }},{% endfor %}">
-                <h2>{{ action.name_of_action }}</h2>
+                <h2><a href="{% url 'action_detail' action.id %}">{{ action.name_of_action }}</a></h2>
                 <p><strong>Date:</strong> {{ action.date }}</p>
                 <p><strong>Description:</strong> {{ action.description }}</p>
                 <p><strong>Meaning:</strong> {{ action.meaning }}</p>

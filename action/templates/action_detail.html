@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ action.name_of_action }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); margin: auto; }
+        h1 { color: #333; }
+        p { margin-bottom: 10px; }
+        strong { color: #007bff; }
+        .back-link { display: block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>{{ action.name_of_action }}</h1>
+    <p><strong>Date:</strong> {{ action.date }}</p>
+    <p><strong>Type of Action:</strong> {{ action.type_of_action.all|join:", " }}</p>
+    <p><strong>Actors:</strong> {{ action.actors.all|join:", " }}</p>
+    <p><strong>Topics:</strong> {{ action.topics.all|join:", " }}</p>
+    <p><strong>Description:</strong> {{ action.description }}</p>
+    <p><strong>Meaning:</strong> {{ action.meaning }}</p>
+    <p><strong>Status:</strong> {{ action.status|default:"N/A" }}</p>
+    <p><strong>Challenge to Action:</strong> {{ action.challenge_to_action|default:"N/A" }}</p>
+    <p><strong>News & Commentary:</strong> {% if action.news_commentary %}<a href="{{ action.news_commentary }}" target="_blank">{{ action.news_commentary }}</a>{% else %}N/A{% endif %}</p>
+    <p><strong>Notes:</strong> {{ action.notes|default:"N/A" }}</p>
+    <p><strong>Additional Info:</strong> {{ action.additional_info|default:"N/A" }}</p>
+    <p><strong>Fallout:</strong> {{ action.fallout|default:"N/A" }}</p>
+    <p><strong>Source:</strong> {% if action.source %}<a href="{{ action.source }}" target="_blank">{{ action.source }}</a>{% else %}N/A{% endif %}</p>
+
+    <a href="{% url 'action_list' %}" class="back-link">⬅ Back to Actions</a>
+</div>
+
+</body>
+</html>

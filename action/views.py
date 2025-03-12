@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Action, Topic
@@ -6,6 +6,16 @@ import logging
 from rest_framework import viewsets
 from .models import Action, Topic
 from .serializers import ActionSerializer, TopicSerializer
+
+
+def action_list(request):
+    actions = Action.objects.all().order_by('-date')  # ✅ 按日期排序，最新的在最上面
+    return render(request, 'actions.html', {'actions': actions})
+
+def action_detail(request, action_id):
+    action = get_object_or_404(Action, id=action_id)
+    return render(request, 'action_detail.html', {'action': action})  # ✅ 傳遞單一 Action 物件
+
 class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
@@ -116,3 +126,5 @@ def delete_action(request, action_id):
     action = Action.objects.get(id=action_id)
     action.delete()
     return redirect("action_list")
+
+
