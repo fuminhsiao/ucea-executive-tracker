@@ -6,13 +6,13 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
-class Actor(models.Model):  # ✅ Actor 仍為多對多
+class Actor(models.Model):  
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
-class TypeOfAction(models.Model):  # ✅ 新增獨立模型
+class TypeOfAction(models.Model):  
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
@@ -31,16 +31,20 @@ class Action(models.Model):
 
     date = models.DateField()
     name_of_action = models.CharField(max_length=500)
-    type_of_action = models.ManyToManyField(TypeOfAction, related_name="actions")  # ✅ 改為多對多
-    actors = models.ManyToManyField(Actor, related_name="actions")  # ✅ 多對多
+    type_of_action = models.ManyToManyField(TypeOfAction, related_name="actions")
+    actors = models.ManyToManyField(Actor, related_name="actions")
     topics = models.ManyToManyField(Topic, related_name="actions")
-    description = models.TextField()
-    meaning = models.TextField()
-    source = models.URLField(blank=True, null=True)
+    description = models.TextField(null=True)
+    meaning = models.TextField(blank=True, null=True)
+    source = models.URLField(max_length=500, blank=True, null=True)
 
     status = models.CharField(max_length=500, blank=True, null=True)  
     challenge_to_action = models.TextField(blank=True, null=True)
-    news_commentary = models.URLField(blank=True, null=True)
+
+    # ✅ 拆分 `news_commentary` 為標題 & 連結
+    news_title = models.CharField(max_length=500, blank=True, null=True)  
+    news_link = models.URLField(max_length=1000, blank=True, null=True)  
+
     notes = models.TextField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True)
     fallout = models.TextField(blank=True, null=True)

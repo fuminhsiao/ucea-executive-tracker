@@ -24,7 +24,11 @@ class Command(BaseCommand):
                 status = row['Status'] if row['Status'] else None
                 source = row['Primary Source'] if row['Primary Source'] else None
                 challenge_to_action = row['Challenges to Action'] if row['Challenges to Action'] else None
-                news_commentary = row['News & Commentary'] if row['News & Commentary'] else None
+                
+                # ✅ 更新 `news_commentary` 相關欄位
+                news_title = row['News & Commentary'] if row['News & Commentary'] else None
+                news_link = row['News Link'] if row['News Link'] else None
+
                 notes = row['Notes'] if row['Notes'] else None
                 additional_info = row['Additional Info'] if row['Additional Info'] else None
                 fallout = row['Fallout'] if row['Fallout'] else None
@@ -50,7 +54,8 @@ class Command(BaseCommand):
                     status=status,
                     source=source,
                     challenge_to_action=challenge_to_action,
-                    news_commentary=news_commentary,
+                    news_title=news_title,  # ✅ 新增標題
+                    news_link=news_link,  # ✅ 新增超連結
                     notes=notes,
                     additional_info=additional_info,
                     fallout=fallout
