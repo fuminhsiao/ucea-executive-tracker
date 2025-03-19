@@ -24,7 +24,8 @@ def create_default_data(sender, **kwargs):
         "Title IX", "Civil Rights", "Antisemitism", "Program Funding", "Regulations", 
         "Immigration", "Curriculum", "Healthcare", "Academic Freedom", 
         "PK-12 School Funding", "Postsecondary Funding", "Postsecondary", 
-        "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education", "Governance", "Early Childhood"
+        "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education", "Governance", "Early Childhood",
+        "Educator Workforce"
     ]
 
     # ✅ 預設 `TypeOfAction` 清單
@@ -38,7 +39,8 @@ def create_default_data(sender, **kwargs):
         "Dept of Ed", "POTUS", "DOGE", "HHS", "OMB",
         "Office of Personnel Management", "NIH", "DoD", "U.S. Congress", "SCOTUS",
         "Dept of Agriculture", "Dept of Interior", "USAID", 
-        "Department of Labor", "Department of Justice", "NOAA"
+        "Department of Labor", "Department of Justice", "NOAA", "NRLB", "Department of State",
+        "Federal Court"
     ]
 
     # ✅ 批量導入 `Topic`
