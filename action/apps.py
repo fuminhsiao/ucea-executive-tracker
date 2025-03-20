@@ -21,7 +21,7 @@ def create_default_data(sender, **kwargs):
     # ✅ 預設 `Topic` 清單
     TOPIC_CHOICES = [
         "Research Funding", "DEI", "LGBTQ+", "School Choice", "Federal Workforce", 
-        "Title IX", "Civil Rights", "Antisemitism", "Program Funding", "Regulations", 
+        "Title IX", "Civil Rights", "Campus Climate", "Program Funding", "Regulations", 
         "Immigration", "Curriculum", "Healthcare", "Academic Freedom", 
         "PK-12 School Funding", "Postsecondary Funding", "Postsecondary", 
         "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education", "Governance", "Early Childhood",
