@@ -31,7 +31,8 @@ def create_default_data(sender, **kwargs):
     # ✅ 預設 `TypeOfAction` 清單
     TYPE_OF_ACTION_CHOICES = [
         "Executive Order", "Agency action", "Litigation", "Agency Memo/Letter",
-        "Nomination/Appointment", "Congressional Action", "Court Ruling/Action"
+        "Nomination/Appointment", "Congressional Action", "Court Ruling/Action",
+        "Gen Services Admin"
     ]
 
     # ✅ 更新 `Actor` 預設清單

@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 status = row['Status'] if row['Status'] else None
                 source = row['Primary Source'] if row['Primary Source'] else None
                 challenge_to_action = row['Challenges to Action'] if row['Challenges to Action'] else None
-                challenge_link = row['Challenges Link'] if row['Challenges Link'] else None
+                challenge_link = row['Challenge Link'] if row['Challenge Link'] else None
                 
                 # ✅ 更新 `news_commentary` 相關欄位
                 news_title = row['News & Commentary'] if row['News & Commentary'] else None
