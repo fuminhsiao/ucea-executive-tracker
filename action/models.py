@@ -40,6 +40,8 @@ class Action(models.Model):
 
     status = models.CharField(max_length=500, blank=True, null=True)  
     challenge_to_action = models.TextField(blank=True, null=True)
+    challenge_link = models.URLField(max_length=1000, blank=True, null=True)
+
 
     # ✅ 拆分 `news_commentary` 為標題 & 連結
     news_title = models.CharField(max_length=500, blank=True, null=True)  
