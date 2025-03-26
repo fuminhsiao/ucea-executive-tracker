@@ -26,6 +26,8 @@ def create_default_data(sender, **kwargs):
         "PK-12 School Funding", "Postsecondary Funding", "Postsecondary", 
         "PK-12 Schools", "Department of Education", "State Jurisdiction", "International Education", "Governance", "Early Childhood",
         "Educator Workforce"
+
+        
     ]
 
     # ✅ 預設 `TypeOfAction` 清單
