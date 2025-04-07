@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Action, Topic, ActionClick, Visit
+from .models import Action, Topic, ActionClick, SiteVisit
 from rest_framework import viewsets
 from .serializers import ActionSerializer, TopicSerializer
 from django.views.decorators.csrf import csrf_exempt
@@ -168,7 +168,7 @@ def log_click(request):
 def record_visit(request):
     if request.method == "POST":
         try:
-            visit_obj, _ = Visit.objects.get_or_create(id=1)
+            visit_obj, _ = SiteVisit.objects.get_or_create(id=1)
             visit_obj.total_visits += 1
             visit_obj.save()
             return JsonResponse({"status": "ok", "total_visits": visit_obj.total_visits})
