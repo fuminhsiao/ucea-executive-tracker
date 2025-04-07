@@ -62,4 +62,10 @@ class ActionClick(models.Model):
     def __str__(self):
         return f"Click on {self.action.name_of_action} at {self.timestamp}"
     
+class Visit(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Visit at {self.timestamp}"
+    
     

@@ -103,6 +103,7 @@
                 <th>Description</th>
                 <th>Meaning</th>
                 <th>Source</th>
+                <th>Topic</th>
                 <th>Clicks</th>
 
                 {% if user.is_authenticated %}
@@ -128,14 +129,17 @@
                             No topics assigned
                         {% endif %}
                     </td>
+                    <td>{{ action.click_count }}</td>
+
                     {% if user.is_authenticated %}
                         <td>
                             <a href="{% url 'edit_action' action.id %}"><button class="btn-primary">Edit</button></a>
                             <a href="{% url 'delete_action' action.id %}" onclick="return confirm('Are you sure?');"><button class="btn-danger">Delete</button></a>
                         </td>
-                        <td>{{ click_counts[action.id]|default:"0" }}</td>
+                        
 
                     {% endif %}
+                    
                 </tr>
             {% endfor %}
         </tbody>
