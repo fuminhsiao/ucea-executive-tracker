@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Action, Topic
+from .models import Action, Topic, ActionClick
 import logging
 from rest_framework import viewsets
-from .models import Action, Topic
 from .serializers import ActionSerializer, TopicSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 
 def action_list(request):
@@ -128,3 +130,37 @@ def delete_action(request, action_id):
     return redirect("action_list")
 
 
+@csrf_exempt
+def log_click(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        action_id = data.get('action_id')
+
+        try:
+            action = Action.objects.get(id=action_id)
+            ActionClick.objects.create(action=action)
+            return JsonResponse({'status': 'ok'})
+        except Action.DoesNotExist:
+            return JsonResponse({'status': 'invalid action id'}, status=400)
+
+    return JsonResponse({'status': 'invalid request'}, status=405)
+
+def backend_view(request):
+    actions = Action.objects.prefetch_related('topics').all()
+    topics = Topic.objects.all()
+
+    total_clicks = ActionClick.objects.count()
+
+    action_click_counts = (
+        ActionClick.objects
+        .values('action')
+        .annotate(count=Count('id'))
+    )
+    click_dict = {item['action']: item['count'] for item in action_click_counts}
+
+    return render(request, 'your_template.html', {
+        'actions': actions,
+        'topics': topics,
+        'total_clicks': total_clicks,
+        'click_counts': click_dict
+    })

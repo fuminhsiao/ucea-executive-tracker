@@ -5,37 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actions Management</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .action-card { 
-            background: white; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border-radius: 5px; 
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            font-size: 13px;
         }
-        .topics {
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f1f1;
             font-weight: bold;
-            color: #007bff;
         }
-        button { padding: 8px 12px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; }
-        .btn-primary { background-color: #007bff; color: white; }
-        .btn-danger { background-color: #dc3545; color: white; }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
         .filters {
             margin-bottom: 15px;
             padding: 10px;
             background: white;
             border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
         }
+
         .filter-input, .filter-select {
-            padding: 8px;
+            padding: 6px;
             margin-right: 10px;
+            font-size: 13px;
         }
+
+        button {
+            padding: 6px 10px;
+            font-size: 12px;
+            margin: 2px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- 🔹 登入 / 登出按鈕 -->
     <div style="float: right;">
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}"><button class="btn-danger">Logout</button></a>
@@ -44,9 +74,9 @@
         {% endif %}
     </div>
 
-    <h1>Actions List</h1>
+    <h2>Actions List</h2>
 
-    <!-- 🔹 Search and Filter Section -->
+    <!-- Filter Section -->
     <div class="filters">
         <label>Search:</label>
         <input type="text" id="search-input" class="filter-input" placeholder="Search by name or description" onkeyup="applyFilters()">
@@ -58,59 +88,73 @@
                 <option value="{{ topic.name }}">{{ topic.name }}</option>
             {% endfor %}
         </select>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_action' %}"><button class="btn-primary">➕ Add Action</button></a>
+        {% endif %}
     </div>
 
-    <!-- 🔹 新增 Action（只有登入後可見） -->
-    {% if user.is_authenticated %}
-        <a href="{% url 'add_action' %}"><button class="btn-primary">➕ Add Action</button></a>
-    {% endif %}
+    <!-- Table Display -->
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Action Name</th>
+                <th>Description</th>
+                <th>Meaning</th>
+                <th>Source</th>
+                <th>Clicks</th>
 
-    <div id="actions-container">
-        {% for action in actions|dictsortreversed:"date" %}  <!-- Sort by date descending -->
-            <div class="action-card" data-name="{{ action.name_of_action|lower }}" data-description="{{ action.description|lower }}" data-topics="{% for topic in action.topics.all %}{{ topic.name|lower }},{% endfor %}">
-                <h2><a href="{% url 'action_detail' action.id %}">{{ action.name_of_action }}</a></h2>
-                <p><strong>Date:</strong> {{ action.date }}</p>
-                <p><strong>Description:</strong> {{ action.description }}</p>
-                <p><strong>Meaning:</strong> {{ action.meaning }}</p>
-                <p><strong>Source:</strong> <a href="{{ action.source }}" target="_blank">Link</a></p>
-
-                <!-- 🔹 顯示 Topic -->
-                <p><strong>Topics:</strong> 
-                    <span class="topics">
+                {% if user.is_authenticated %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="actions-container">
+            {% for action in actions|dictsortreversed:"date" %}
+                <tr class="action-row"
+                    data-name="{{ action.name_of_action|lower }}"
+                    data-description="{{ action.description|lower }}"
+                    data-topics="{% for topic in action.topics.all %}{{ topic.name|lower }},{% endfor %}">
+                    <td>{{ action.date }}</td>
+                    <td><a href="{% url 'action_detail' action.id %}">{{ action.name_of_action }}</a></td>
+                    <td>{{ action.description }}</td>
+                    <td>{{ action.meaning }}</td>
+                    <td><a href="{{ action.source }}" target="_blank">Link</a></td>
+                    <td>
                         {% if action.topics.all %}
                             {{ action.topics.all|join:", " }}
                         {% else %}
                             No topics assigned
                         {% endif %}
-                    </span>
-                </p>
+                    </td>
+                    {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'edit_action' action.id %}"><button class="btn-primary">Edit</button></a>
+                            <a href="{% url 'delete_action' action.id %}" onclick="return confirm('Are you sure?');"><button class="btn-danger">Delete</button></a>
+                        </td>
+                        <td>{{ click_counts[action.id]|default:"0" }}</td>
 
-                {% if user.is_authenticated %}
-                    <a href="{% url 'edit_action' action.id %}"><button class="btn-primary">✏️ Edit</button></a>
-                    <a href="{% url 'delete_action' action.id %}" onclick="return confirm('Are you sure?');"><button class="btn-danger">🗑️ Delete</button></a>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <script>
         function applyFilters() {
             const searchQuery = document.getElementById("search-input").value.toLowerCase();
             const selectedTopic = document.getElementById("topic-filter").value.toLowerCase();
 
-            document.querySelectorAll(".action-card").forEach(card => {
-                const name = card.getAttribute("data-name");
-                const description = card.getAttribute("data-description");
-                const topics = card.getAttribute("data-topics");
+            document.querySelectorAll(".action-row").forEach(row => {
+                const name = row.getAttribute("data-name");
+                const description = row.getAttribute("data-description");
+                const topics = row.getAttribute("data-topics");
 
                 const matchesSearch = searchQuery === "" || name.includes(searchQuery) || description.includes(searchQuery);
                 const matchesTopic = selectedTopic === "" || topics.includes(selectedTopic);
 
-                if (matchesSearch && matchesTopic) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
+                row.style.display = (matchesSearch && matchesTopic) ? "table-row" : "none";
             });
         }
     </script>

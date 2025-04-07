@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import action_list_view, user_login, user_logout, add_action, edit_action, delete_action, action_detail
+from .views import action_list_view, user_login, user_logout, add_action, edit_action, delete_action, action_detail, log_click
 from rest_framework.routers import DefaultRouter
 from .views import ActionViewSet, TopicViewSet
 
@@ -16,4 +16,6 @@ urlpatterns = [
     path("delete_action/<int:action_id>/", delete_action, name="delete_action"),
     path('api/', include(router.urls)),
     path('actions/<int:action_id>/', action_detail, name='action_detail'),  # ✅ 新增 Action 詳細頁面
+    path('api/log-click/', log_click, name='log_click'),
+
 ]

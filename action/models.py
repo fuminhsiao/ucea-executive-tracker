@@ -53,3 +53,13 @@ class Action(models.Model):
 
     def __str__(self):
         return self.name_of_action
+
+
+class ActionClick(models.Model):
+    action = models.ForeignKey(Action, on_delete=models.CASCADE, related_name='clicks')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Click on {self.action.name_of_action} at {self.timestamp}"
+    
+    
