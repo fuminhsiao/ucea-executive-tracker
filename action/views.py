@@ -8,6 +8,7 @@ from .serializers import ActionSerializer, TopicSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from django.db.models import Count
 
 
 def action_list(request):
