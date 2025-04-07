@@ -77,22 +77,30 @@
     <h2>Actions List</h2>
 
     <!-- Filter Section -->
-    <div class="filters">
-        <label>Search:</label>
-        <input type="text" id="search-input" class="filter-input" placeholder="Search by name or description" onkeyup="applyFilters()">
-
-        <label>Filter by Topic:</label>
-        <select id="topic-filter" class="filter-select" onchange="applyFilters()">
-            <option value="">All Topics</option>
-            {% for topic in topics %}
-                <option value="{{ topic.name }}">{{ topic.name }}</option>
-            {% endfor %}
-        </select>
-
-        {% if user.is_authenticated %}
-            <a href="{% url 'add_action' %}"><button class="btn-primary">➕ Add Action</button></a>
-        {% endif %}
+    <!-- Filter Section -->
+    <div class="filters" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <label>Search:</label>
+            <input type="text" id="search-input" class="filter-input" placeholder="Search by name or description" onkeyup="applyFilters()">
+    
+            <label>Filter by Topic:</label>
+            <select id="topic-filter" class="filter-select" onchange="applyFilters()">
+                <option value="">All Topics</option>
+                {% for topic in topics %}
+                    <option value="{{ topic.name }}">{{ topic.name }}</option>
+                {% endfor %}
+            </select>
+    
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_action' %}"><button class="btn-primary">➕ Add Action</button></a>
+            {% endif %}
+        </div>
+    
+        <div style="font-weight: bold; font-size: 14px; padding-right: 10px;">
+            Total Visits: {{ total_visits }}
+        </div>
     </div>
+
 
     <!-- Table Display -->
     <table>

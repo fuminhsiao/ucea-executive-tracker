@@ -39,6 +39,7 @@ def action_list_view(request):
     )
     click_dict = {item['action']: item['count'] for item in click_data}
     total_clicks = sum(click_dict.values())
+    total_visits = SiteVisit.objects.count()
 
     # ✅ 把點擊數塞進每個 action 物件
     for action in actions:
@@ -48,6 +49,7 @@ def action_list_view(request):
         'actions': actions,
         'topics': topics,
         'total_clicks': total_clicks,
+        'total_visits': total_visits,
     })
 
 
@@ -165,13 +167,8 @@ def log_click(request):
 
 
 @csrf_exempt
-def record_visit(request):
-    if request.method == "POST":
-        try:
-            visit_obj, _ = SiteVisit.objects.get_or_create(id=1)
-            visit_obj.total_visits += 1
-            visit_obj.save()
-            return JsonResponse({"status": "ok", "total_visits": visit_obj.total_visits})
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
-    return JsonResponse({"status": "invalid request"}, status=405)
+def record_site_visit(request):
+    if request.method == 'POST':
+        SiteVisit.objects.create()
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'invalid request'}, status=405)

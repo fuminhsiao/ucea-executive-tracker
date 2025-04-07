@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 class Topic(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -63,5 +65,7 @@ class ActionClick(models.Model):
         return f"Click on {self.action.name_of_action} at {self.timestamp}"
     
 class SiteVisit(models.Model):
-    total_visits = models.PositiveIntegerField(default=0)
-    
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Visit at {self.timestamp}"
