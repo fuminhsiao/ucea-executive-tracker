@@ -166,9 +166,12 @@ def log_click(request):
 
 @csrf_exempt
 def record_visit(request):
-    if request.method == 'POST':
-        visit, _ = Visit.objects.get_or_create(id=1)
-        visit.total_visits += 1
-        visit.save()
-        return JsonResponse({"status": "success", "total_visits": visit.total_visits})
+    if request.method == "POST":
+        try:
+            visit_obj, _ = Visit.objects.get_or_create(id=1)
+            visit_obj.total_visits += 1
+            visit_obj.save()
+            return JsonResponse({"status": "ok", "total_visits": visit_obj.total_visits})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
     return JsonResponse({"status": "invalid request"}, status=405)
